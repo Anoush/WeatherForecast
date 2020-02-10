@@ -1,0 +1,2 @@
+def GetWeatherConditions(date):
+    

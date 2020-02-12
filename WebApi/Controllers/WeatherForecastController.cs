@@ -3,122 +3,104 @@ using Library;
 using Library.Entities;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
-using WebApi.Builders;
+using System.Linq;
 using WebApi.Models;
+using System;
+using static WebApi.Models.ApiResultMessages;
 
 namespace WebApi.Controllers
 {
-    [Route("/[controller]")]
+    [Route("/[controller]/[action]")]
     [ApiController]
     public class WeatherForecastController : ControllerBase
     {
         private readonly WeatherForecastService _weatherForecastService;
-        private readonly WeatherForecastBuilder _weatherForecastBuilder;
 
-        private WeatherForecastBuilder WeatherForecastBuilder { get => _weatherForecastBuilder; }
-
-        public WeatherForecastController(WeatherForecastService weatherForecastService, WeatherForecastBuilder weatherForecastBuilder)
+        public WeatherForecastController(WeatherForecastService weatherForecastService) 
         {
             _weatherForecastService = weatherForecastService;
-            _weatherForecastBuilder = weatherForecastBuilder;
         }
 
-        //[HttpGet(Name = nameof(GetWeatherForecast))]
-        //public ActionResult GetWeatherForecast(int? dia)
-        //{
-        //    Processor system = InitializeSystem();
-        //    var predictions = new List<WeatherResult>();
+        [HttpGet(Name = nameof(GetWeatherForecast))]
+        public ActionResult GetWeatherForecast(string day)
+        {
+            try
+            {
+                var weatherForecastList = new List<WeatherResult>();
+                if (day != null)
+                {
+                    var weatherForecast = GetByDay(day.ToString());
+                    if (weatherForecast != null) weatherForecastList.Add(GetByDay(day.ToString()));
+                }
+                else weatherForecastList = GetAll();
 
-        //    if (dia != null)
-        //        predictions.Add(MapWeatherForecastObjectToWeatherResult(system.CalculateConditionsForADay((int)dia)));
-        //    else
-        //        system.GetAllWeatherForecast().ForEach(item => predictions.Add(MapWeatherForecastObjectToWeatherResult(item)));
+                if (weatherForecastList.Count == 0)
+                    return Ok(new ApiResultMessages { Status = Statuses.Success.GetEnumDescription(), Message = Messages.NoDataFound.GetEnumDescription() });
 
-        //    return Ok(predictions);
-        //}
+                return Ok(weatherForecastList);
+            }
+            catch { return Ok(new ApiResultMessages { Status = Statuses.Success.GetEnumDescription(), Message = Messages.ServiceError.GetEnumDescription() }); }
+            
+        }
 
-
-        [HttpGet]
-        public ActionResult<List<WeatherForecast>> Get() {
-        
+        [HttpGet(Name = nameof(GenerateWeatherForecast))]
+        public ActionResult GenerateWeatherForecast()
+        {
             var weatherForecastList = _weatherForecastService.Get();
-            var returnData = new List<WeatherForecast>();
-            weatherForecastList.ForEach(item => returnData.Add(WeatherForecastBuilder.BuildBusinessWeatherForecast(item)));
+            Processor system = new Processor();
+
+            if (weatherForecastList.Count == 0)
+                weatherForecastList = PopulateData(system);
+
+            var conditionResults = system.CalculateConditionsForAPeriod(weatherForecastList).ToList();
+            var resultData = new List<ReportModel>();
+            conditionResults.ForEach(item => resultData.Add(Mapping.MapResultToReport(item)));
+            return Ok(resultData);
+        }
+
+        [HttpGet(Name = nameof(ClearWeatherForecast))]
+        public ActionResult ClearWeatherForecast()
+        {
+            try
+            {
+                CleanData();
+                return Ok(new ApiResultMessages { Status = Statuses.Success.GetEnumDescription(), Message = Messages.CleanUpSuccess.GetEnumDescription() });
+            }
+            catch 
+            { 
+                return Ok(new ApiResultMessages { Status = Statuses.Error.GetEnumDescription(), Message = Messages.CleanUpError.GetEnumDescription() }); 
+            }
+            
+        }
+
+        private List<WeatherForecast> PopulateData(Processor system)
+        {
+            var weatherForecastList = system.GetAllWeatherForecast();
+            weatherForecastList.ForEach(item => _weatherForecastService.Create(item));
+            return weatherForecastList;
+        }
+
+        private List<WeatherForecast> CleanData()
+        {
+            var weatherForecastList = _weatherForecastService.Get();
+            if (weatherForecastList.Count > 0)
+                weatherForecastList.ForEach(item => _weatherForecastService.Remove(item));
+            return weatherForecastList;
+        }
+
+        private List<WeatherResult> GetAll()        
+        {
+            var weatherForecastList = _weatherForecastService.Get();
+
+            var returnData = new List<WeatherResult>();
+            weatherForecastList.ForEach(item => returnData.Add(Mapping.MapObjectToModel(item)));
             return returnData;
         }
 
-        [HttpGet("{day:length(24)}", Name = "GetWeatherForecast")]
-        public ActionResult<WeatherForecast> Get(string day)
+        private WeatherResult GetByDay(string day)
         {
-            var weatherforecast = _weatherForecastService.Get(day);
-
-            if (weatherforecast == null)
-            {
-                return NotFound();
-            }
-
-            return WeatherForecastBuilder.BuildBusinessWeatherForecast(weatherforecast);
-        }
-
-        [HttpPost]
-        public ActionResult<WeatherForecast> Create(WeatherForecast weatherforecast)
-        {
-            var weatherforecastobj = WeatherForecastBuilder.BuildDataWeatherForecast(weatherforecast);
-            _weatherForecastService.Create(weatherforecastobj);
-
-            return CreatedAtRoute("GetWeatherForecast", new { id = weatherforecastobj.Id.ToString() }, weatherforecast);
-        }
-
-        [HttpPut("{id:length(24)}")]
-        public IActionResult Update(string id, WeatherForecast weatherforecast)
-        {
-            var weatherforecastIn = WeatherForecastBuilder.BuildDataWeatherForecast(weatherforecast);
-            
-            if (_weatherForecastService.Get(id) == null)
-            {
-                return NotFound();
-            }
-
-            _weatherForecastService.Update(id, weatherforecastIn);
-
-            return NoContent();
-        }
-
-        [HttpDelete("{id:length(24)}")]
-        public IActionResult Delete(string id)
-        {
-            var weatherforecast = _weatherForecastService.Get(id);
-
-            if (weatherforecast == null)
-            {
-                return NotFound();
-            }
-
-            _weatherForecastService.Remove(weatherforecast.Id);
-
-            return NoContent();
-        }
-
-        private static Processor InitializeSystem()
-        {
-            var planet1 = new Planet(500, "Ferrengi", 1);
-            var planet2 = new Planet(2000, "Betasoide", 3);
-            var planet3 = new Planet(1000, "Vulcano", -5);
-
-            var system = new Processor();
-            system.Planets.AddRange(new[] { planet1, planet2, planet3 });
-
-            return system;
-        }
-
-        private WeatherResult MapWeatherForecastObjectToWeatherResult(WeatherForecast weatherForecast)
-        {
-            return new WeatherResult
-            {
-                Day = weatherForecast.Day,
-                Date = weatherForecast.Date.ToString("dd/MM/yyyy"),
-                Weather = weatherForecast.Prediction.GetEnumDescription()
-            };
+            var weatherForecast = _weatherForecastService.Get(day);
+            return weatherForecast != null ? Mapping.MapObjectToModel(weatherForecast) : null;
         }
     }
 }

@@ -1,0 +1,15 @@
+C:\Silvina\ML\TriPlanetarySystem\Library\bin\Release\Library.dll
+C:\Silvina\ML\TriPlanetarySystem\Library\bin\Release\Library.pdb
+C:\Silvina\ML\TriPlanetarySystem\Library\obj\Release\Library.csprojAssemblyReference.cache
+C:\Silvina\ML\TriPlanetarySystem\Library\obj\Release\Library.dll
+C:\Silvina\ML\TriPlanetarySystem\Library\obj\Release\Library.pdb
+C:\Silvina\ML\TriPlanetarySystem\Library\bin\Release\MongoDB.Bson.dll
+C:\Silvina\ML\TriPlanetarySystem\Library\bin\Release\MongoDB.Bson.xml
+C:\Silvina\ML\TriPlanetarySystem\Library\obj\Release\Library.csproj.CopyComplete
+C:\Silvina\ML\WeatherForecast\Library\bin\Release\Library.dll
+C:\Silvina\ML\WeatherForecast\Library\bin\Release\Library.pdb
+C:\Silvina\ML\WeatherForecast\Library\bin\Release\MongoDB.Bson.xml
+C:\Silvina\ML\WeatherForecast\Library\obj\Release\Library.csprojAssemblyReference.cache
+C:\Silvina\ML\WeatherForecast\Library\obj\Release\Library.csproj.CopyComplete
+C:\Silvina\ML\WeatherForecast\Library\obj\Release\Library.dll
+C:\Silvina\ML\WeatherForecast\Library\obj\Release\Library.pdb

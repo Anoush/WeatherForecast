@@ -13,8 +13,15 @@ namespace WebApi.Controllers
                 href = Url.Link(nameof(GetRoot), null),
                 wheatherForecast = new
                 {
-                   // href = Url.Link(nameof(WeatherForecastController.GetWeatherForecast),null)
-                    href = Url.Link(nameof(WeatherForecastController.Get),null)
+                   href = Url.Link(nameof(WeatherForecastController.GetWeatherForecast), null)
+                },
+                generateWeatherForecast = new
+                {
+                    href = Url.Link(nameof(WeatherForecastController.GenerateWeatherForecast), null)
+                },
+                clearWeatherForecast = new
+                {
+                    href = Url.Link(nameof(WeatherForecastController.ClearWeatherForecast), null)
                 }
             };
             return Ok(response);

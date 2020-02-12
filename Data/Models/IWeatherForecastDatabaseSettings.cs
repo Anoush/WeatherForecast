@@ -1,6 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿
+using MongoDB.Driver;
 
 namespace Data.Models
 {
@@ -9,5 +8,6 @@ namespace Data.Models
         string WeatherForecastCollectionName { get; set; }
         string ConnectionString { get; set; }
         string DatabaseName { get; set; }
+        SslSettings SslSettings { get; set; }
     }
 }

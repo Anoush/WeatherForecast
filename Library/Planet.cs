@@ -33,14 +33,12 @@ namespace Library
             set => headingDegrees = value;
         }
        
-        //inicio del calculo. (cuando comienza a existir)
         protected DateTime LastCalculatedDate { get => lastCalculatedDate; set => lastCalculatedDate = value; }
         public int DistanceToSun { get; protected set; }
 
         public void UpdatePosition(DateTime date)
         {
-            var daysToCalculate = Math.Ceiling((date - LastCalculatedDate).TotalDays);
-            var degreeDelta = ((int)daysToCalculate * AngularSpeed) % 360;
+            var degreeDelta = AngularSpeed % 360;
             HeadingDegrees = MathUtility.RotateDegrees(HeadingDegrees, degreeDelta);
             Position = MathUtility.ConvertPolarToCartesianCoordinates(DistanceToSun, headingDegrees);
 

@@ -1,0 +1,9 @@
+C:\Silvina\ML\TriPlanetarySystem\TriPlanetarySystem\bin\Debug\TriPlanetarySystem.exe.config
+C:\Silvina\ML\TriPlanetarySystem\TriPlanetarySystem\bin\Debug\TriPlanetarySystem.exe
+C:\Silvina\ML\TriPlanetarySystem\TriPlanetarySystem\bin\Debug\TriPlanetarySystem.pdb
+C:\Silvina\ML\TriPlanetarySystem\TriPlanetarySystem\obj\Debug\TriPlanetarySystem.csprojAssemblyReference.cache
+C:\Silvina\ML\TriPlanetarySystem\TriPlanetarySystem\obj\Debug\TriPlanetarySystem.exe
+C:\Silvina\ML\TriPlanetarySystem\TriPlanetarySystem\obj\Debug\TriPlanetarySystem.pdb
+C:\Silvina\ML\TriPlanetarySystem\TriPlanetarySystem\bin\Debug\Library.dll
+C:\Silvina\ML\TriPlanetarySystem\TriPlanetarySystem\bin\Debug\Library.pdb
+C:\Silvina\ML\TriPlanetarySystem\TriPlanetarySystem\obj\Debug\TriPlanetarySystem.csproj.CopyComplete

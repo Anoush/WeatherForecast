@@ -1,17 +1,18 @@
 ﻿using Data.Models;
+using Library.Entities;
 using MongoDB.Driver;
-using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Security.Authentication;
 
 namespace Data.Services
 {
     public class WeatherForecastService
     {
         private readonly IMongoCollection<WeatherForecast> _weatherForecast;
-
+        
         public WeatherForecastService(IWeatherForecastDatabaseSettings settings)
         {
+            settings.SslSettings = new SslSettings() { EnabledSslProtocols = SslProtocols.Tls12 };
             var client = new MongoClient(settings.ConnectionString);
             var database = client.GetDatabase(settings.DatabaseName);
 
@@ -22,7 +23,7 @@ namespace Data.Services
            _weatherForecast.Find(item => true).ToList();
 
         public WeatherForecast Get(string day) =>
-            _weatherForecast.Find(item => item.Day == int.Parse(day)).FirstOrDefault();
+        _weatherForecast.Find(item => item.Day == int.Parse(day)).FirstOrDefault();
 
         public WeatherForecast Create(WeatherForecast item)
         {

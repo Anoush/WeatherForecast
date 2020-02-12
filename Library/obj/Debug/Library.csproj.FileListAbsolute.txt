@@ -1,0 +1,8 @@
+C:\Silvina\ML\TriPlanetarySystem\Library\bin\Debug\Library.dll
+C:\Silvina\ML\TriPlanetarySystem\Library\bin\Debug\Library.pdb
+C:\Silvina\ML\TriPlanetarySystem\Library\obj\Debug\Library.dll
+C:\Silvina\ML\TriPlanetarySystem\Library\obj\Debug\Library.pdb
+C:\Silvina\ML\TriPlanetarySystem\Library\obj\Debug\Library.csprojAssemblyReference.cache
+C:\Silvina\ML\TriPlanetarySystem\Library\obj\Debug\Library.csproj.CopyComplete
+C:\Silvina\ML\TriPlanetarySystem\Library\bin\Debug\MongoDB.Bson.dll
+C:\Silvina\ML\TriPlanetarySystem\Library\bin\Debug\MongoDB.Bson.xml

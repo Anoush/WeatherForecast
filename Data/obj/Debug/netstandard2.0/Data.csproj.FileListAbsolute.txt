@@ -1,0 +1,11 @@
+C:\Silvina\ML\TriPlanetarySystem\Data\bin\Debug\netstandard2.0\Data.deps.json
+C:\Silvina\ML\TriPlanetarySystem\Data\bin\Debug\netstandard2.0\Data.dll
+C:\Silvina\ML\TriPlanetarySystem\Data\obj\Debug\netstandard2.0\Data.csprojAssemblyReference.cache
+C:\Silvina\ML\TriPlanetarySystem\Data\obj\Debug\netstandard2.0\Data.AssemblyInfoInputs.cache
+C:\Silvina\ML\TriPlanetarySystem\Data\obj\Debug\netstandard2.0\Data.AssemblyInfo.cs
+C:\Silvina\ML\TriPlanetarySystem\Data\bin\Debug\netstandard2.0\Data.pdb
+C:\Silvina\ML\TriPlanetarySystem\Data\obj\Debug\netstandard2.0\Data.dll
+C:\Silvina\ML\TriPlanetarySystem\Data\obj\Debug\netstandard2.0\Data.pdb
+C:\Silvina\ML\TriPlanetarySystem\Data\bin\Debug\netstandard2.0\Library.dll
+C:\Silvina\ML\TriPlanetarySystem\Data\bin\Debug\netstandard2.0\Library.pdb
+C:\Silvina\ML\TriPlanetarySystem\Data\obj\Debug\netstandard2.0\Data.csproj.CopyComplete

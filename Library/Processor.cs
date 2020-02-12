@@ -1,4 +1,4 @@
-﻿using Data;
+﻿using System.Data;
 using Library.Entities;
 using System;
 using System.Collections.Generic;
@@ -8,26 +8,33 @@ namespace Library
 {
     public class Processor
     {
+        public Processor()
+        {
+            InitializeSystem();
+        }
         #region Properties & Fields
         private readonly List<Planet> planets = new List<Planet>();
 
         public List<Planet> Planets => planets;
-
-        public DateTime MaxRainyPeriod => _maxRainyPeriod;
-
-        private DateTime _maxRainyPeriod { get; set; }
-
+        
         #endregion
 
         #region Public Methods
-        public Dictionary<string, int> CalculateConditionsForAPeriod(int days)
+
+        public List<WeatherForecast> GetWeatherForecast(int days)
         {
-            List<WeatherForecast> predictions = GetWeatherForecastByDays(days);
-            return new Dictionary<string, int>
+            return GetWeatherForecastByDays(days);
+        }
+
+        public Dictionary<string, string> CalculateConditionsForAPeriod(List<WeatherForecast> predictions)
+        {
+            return new Dictionary<string, string>
             {
-                { WeatherForecast.Weather.Rain.GetEnumDescription(), predictions.ToArray().Where(x => x.Prediction == WeatherForecast.Weather.Rain).Count() },
-                { WeatherForecast.Weather.Dry.GetEnumDescription(), predictions.ToArray().Where(x => x.Prediction == WeatherForecast.Weather.Dry).Count() },
-                { WeatherForecast.Weather.Rain.GetEnumDescription(), predictions.ToArray().Where(x => x.Prediction == WeatherForecast.Weather.Ideal).Count() }
+                { WeatherForecast.Condition.Rain.GetEnumDescription(), predictions.ToArray().Where(x => x.Prediction == WeatherForecast.Condition.Rain).Count().ToString() },
+                { WeatherForecast.Condition.Dry.GetEnumDescription(), predictions.ToArray().Where(x => x.Prediction == WeatherForecast.Condition.Dry).Count().ToString() },
+                { WeatherForecast.Condition.Ideal.GetEnumDescription(), predictions.ToArray().Where(x => x.Prediction == WeatherForecast.Condition.Ideal).Count().ToString() },
+                { WeatherForecast.Condition.Normal.GetEnumDescription(), predictions.ToArray().Where(x => x.Prediction == WeatherForecast.Condition.Normal).Count().ToString() },
+                { WeatherForecast.Condition.MaximumRain.GetEnumDescription(), predictions.ToArray().FirstOrDefault(x=> x.IsMaxRainyPeriod).Date.ToString("dd/MM/yyyy") }
             };
         }
 
@@ -52,50 +59,29 @@ namespace Library
                 Planets.ForEach(planet => planet.UpdatePosition(date));
 
                 if (IsSunWithinPlanetsTriangle(out var area))
-                {
-                    predictions.Add(BuildWeatherObject(i, date, WeatherForecast.Weather.Rain));
-                    if (area > maxTriangleArea) _maxRainyPeriod = date;
-                }
+                    predictions.Add(BuildWeatherObject(i, date, WeatherForecast.Condition.Rain, area > maxTriangleArea));
 
-                if (ArePlanetsAligned(out var slope))
+                else if (ArePlanetsAligned(out var slope))
                 {
                     slope = 0;
                     if (ArePlanetsAlignedWithTheSun(slope))
-                        predictions.Add(BuildWeatherObject(i, date, WeatherForecast.Weather.Dry));
+                        predictions.Add(BuildWeatherObject(i, date, WeatherForecast.Condition.Dry));
                     else
-                        predictions.Add(BuildWeatherObject(i, date, WeatherForecast.Weather.Ideal));
+                        predictions.Add(BuildWeatherObject(i, date, WeatherForecast.Condition.Ideal));
                 }
+                else predictions.Add(BuildWeatherObject(i, date, WeatherForecast.Condition.Normal));
             }
-           // Save(predictions);
-            
-
             return predictions;
         }
 
-        public WeatherForecast CalculateConditionsForADay(int day)
-        {
-            var date = DateTime.Today.AddDays(day).Date;
-            Planets.ForEach(planet => planet.UpdatePosition(date));
-
-            if (IsSunWithinPlanetsTriangle(out var area))
-                return BuildWeatherObject(day, date, WeatherForecast.Weather.Rain);
-
-            if (ArePlanetsAligned(out var slope))
-            {
-                slope = 0;
-                if (ArePlanetsAlignedWithTheSun(slope)) return BuildWeatherObject(day, date, WeatherForecast.Weather.Dry);
-            }
-
-            return BuildWeatherObject(day, date, WeatherForecast.Weather.Ideal);
-        }
-
-        private static WeatherForecast BuildWeatherObject(int day, DateTime date, WeatherForecast.Weather weather)
+        private static WeatherForecast BuildWeatherObject(int day, DateTime date, WeatherForecast.Condition weather, bool isMaxRainyPeriod = false)
         {
             return new WeatherForecast
             {
                 Date = date,
                 Day = day,
-                Prediction = weather
+                Prediction = weather,
+                IsMaxRainyPeriod = isMaxRainyPeriod
             };
         }
 
@@ -170,14 +156,14 @@ namespace Library
             return true;
         }
 
-        //private void Save(List<WeatherForecast> weatherForecastsBusinessObject)
-        //{
-        //    var data = new Persistence();
-        //    var dataObjectList = new List<WeatherForecastObject>();
-        //    weatherForecastsBusinessObject.ForEach(item =>
-        //    dataObjectList.Add(new WeatherForecastObject { Date = item.Date.ToString("dd/MM/yyyy"), Day = item.Day, Prediction = item.Prediction.GetEnumDescription()}));
-        //    data.PersistData(dataObjectList);
-        //}
+        private void InitializeSystem()
+        {
+            var planet1 = new Planet(500, "Ferrengi", 1);
+            var planet2 = new Planet(2000, "Betasoide", 3);
+            var planet3 = new Planet(1000, "Vulcano", -5);
+
+            Planets.AddRange(new[] { planet1, planet2, planet3 });
+        }
 
         #endregion
 
